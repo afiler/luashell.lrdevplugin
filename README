@@ -1,0 +1,19 @@
+== Lightroom Lua Shell ==
+
+Lightroom Lua Shell presents a command-line interface in Adobe Lightroom, as an aid in plugin development, or a as quick low-level way to make metadata changes on photos.
+
+To install, click File -> Plug-In Manager -> Add, and pick this directory.
+
+To use, click Library -> Plug-In Extras -> Lua shell. The Lightroom plugin API does not appear to provide a way to make scrollable dialogs, so you may find new command results appearing below the bottom of the output view. To clear the view, just type "clear()".
+
+Besides clear(), other pre-loaded extras provided in the shell environment include:
+ - catalog => LrApplication.activeCatalog()
+ - target = LrApplication.activeCatalog():getTargetPhoto()
+ - targets = LrApplication.activeCatalog():getTargetPhotos()
+Of course, you can still call import() just as you would inside a plugin.
+
+Note that commands that would normally need to be called asynchronously (within an LrTask) are silently wrapped, so that:
+x = target:getRawMetadata('fileSize')
+becomes:
+LrTasks.startAsyncTask(function() x = target:getRawMetadata('fileSize')) end)
+Note that in the result window, normal return values are prefixed by "->", while asynchronous return values are prefixed by "=>".
